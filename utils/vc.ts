@@ -8,3 +8,14 @@ export async function addActiveVoiceChannel(voiceChannelId: string): Promise<voi
 
   await client.disconnect()
 }
+
+export async function getActiveVoiceChannels(): Promise<Array<string>> {
+  const client = createClient();
+  await client.connect();
+
+  const voiceChannels = await client.sMembers("voice_channels");
+
+  await client.disconnect()
+
+  return voiceChannels;
+}

@@ -2,7 +2,7 @@ import { CategoryChannel, VoiceState } from "discord.js"
 import { ChannelTypes } from "discord.js/typings/enums";
 
 import { voiceChannelId, categoryId } from "../config.json";
-import { addActiveVoiceChannel } from "../utils/addVoiceChannel";
+import { addActiveVoiceChannel } from "../utils/vc";
 
 async function createVoiceChannel(voiceState: VoiceState) {
   const guild = voiceState.guild;
