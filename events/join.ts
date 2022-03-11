@@ -1,7 +1,7 @@
 import { CategoryChannel, VoiceState } from "discord.js"
 import { ChannelTypes } from "discord.js/typings/enums";
 
-import { voiceChannelId, categoryId } from "../config.json";
+import { voiceChannelId, categoryId, defaultUserLimit, defaultBitrate } from "../config.json";
 import { addActiveVoiceChannel } from "../utils/vc";
 
 async function createVoiceChannel(voiceState: VoiceState) {
@@ -13,7 +13,8 @@ async function createVoiceChannel(voiceState: VoiceState) {
   try {
     const memberChannel = await channelCategory.createChannel(member?.displayName || "Channel", {
       type: ChannelTypes.GUILD_VOICE,
-      userLimit: 0
+      bitrate: defaultBitrate,
+      userLimit: defaultUserLimit
     });
     
     // Add voice channel to redis server

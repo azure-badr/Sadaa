@@ -4,5 +4,7 @@
   "token": "",
   "voiceChannelId": "",
   "categoryId": "",
-  "idleCategoryId": ""
+  "idleCategoryId": "",
+  "defaultUserLimit": 5,
+  "defaultBitrate": 96000
 }
