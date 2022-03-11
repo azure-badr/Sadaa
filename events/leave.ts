@@ -11,10 +11,10 @@ export default {
       return;
 
     const channel = oldState.channel;
-    if (channel?.members.size === 0) {
-      await channel.delete();
-      await deleteActiveVoiceChannel(oldState.channelId);
+    if (channel?.members.size !== 0) 
       return
-    }
+    
+    channel.delete()
+      .then(async () => await deleteActiveVoiceChannel(oldState.channelId))
   }
 }
