@@ -19,3 +19,7 @@ export async function getActiveVoiceChannels(): Promise<Array<string>> {
 
   return voiceChannels;
 }
+
+export async function isVoiceChannelActive(voiceChannelId: string): Promise<boolean> {
+  return (await getActiveVoiceChannels()).includes(voiceChannelId);
+}
