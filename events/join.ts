@@ -2,6 +2,7 @@ import { CategoryChannel, VoiceState } from "discord.js"
 import { ChannelTypes } from "discord.js/typings/enums";
 
 import { voiceChannelId, categoryId } from "../config.json";
+import { addActiveVoiceChannel } from "../utils/addVoiceChannel";
 
 async function createVoiceChannel(voiceState: VoiceState) {
   const guild = voiceState.guild;
@@ -9,12 +10,19 @@ async function createVoiceChannel(voiceState: VoiceState) {
 
   const channelCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
-  const memberChannel = await channelCategory.createChannel(member?.displayName || "Channel", {
-    type: ChannelTypes.GUILD_VOICE,
-    userLimit: 0
-  });
+  try {
+    const memberChannel = await channelCategory.createChannel(member?.displayName || "Channel", {
+      type: ChannelTypes.GUILD_VOICE,
+      userLimit: 0
+    });
+    
+    // Add voice channel to redis server
+    addActiveVoiceChannel(memberChannel.id);
+    return memberChannel;
 
-  return memberChannel;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export default {
@@ -32,5 +40,6 @@ export default {
         member?.voice.setChannel(channel)
           .catch(console.error);
       })
+      .catch(console.error)
   }
 }
