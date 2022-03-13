@@ -1,4 +1,22 @@
+import { GuildMember, VoiceChannel } from "discord.js";
 import { createClient } from "redis";
+
+import { applicationId } from "../config.json";
+
+export async function isVoiceChannelSaved(voiceChannel: VoiceChannel): Promise<boolean | undefined> {
+  
+  /*
+  This function is used to check if a voice channel is saved by 
+  checking if a voice channel has CREATE_INSTANT_INVITE permissions. 
+  Everytime a voice channel is saved, it will enable CREATE_INSTANT_INVITE permission
+  for the bot to indicate that the channel is saved
+  */
+  
+  const client = voiceChannel.guild.members.cache.get(applicationId) as GuildMember;
+  const permission = voiceChannel.permissionsFor(client.id);
+
+  return permission?.has("CREATE_INSTANT_INVITE");
+}
 
 export async function addActiveVoiceChannel(voiceChannelId: string): Promise<void> {
   const client = createClient();

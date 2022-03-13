@@ -27,6 +27,7 @@ async function createVoiceChannel(voiceState: VoiceState) {
         {
           id: applicationId,
           allow: ["VIEW_CHANNEL"],
+          deny: ["CREATE_INSTANT_INVITE"] // Indication of a saved voice channel
         },
         // Overwrite for user
         {
