@@ -6,8 +6,6 @@ export default {
   name: "voiceStateUpdate",
   once: false,
   execute: async (oldState: VoiceState, newState: VoiceState) => {
-    if (newState.channel) return;
-
     const channel = oldState.channel;
     if (channel?.members.size !== 0) 
       return
