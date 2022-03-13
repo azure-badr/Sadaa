@@ -1,7 +1,13 @@
 import { CategoryChannel, VoiceState } from "discord.js"
 import { ChannelTypes } from "discord.js/typings/enums";
 
-import { applicationId, voiceChannelId, categoryId, defaultUserLimit, defaultBitrate } from "../config.json";
+import {
+  applicationId,
+  voiceChannelId,
+  categoryId,
+  defaultUserLimit,
+  defaultBitrate
+} from "../config.json";
 import { addActiveVoiceChannel } from "../utils/vc";
 
 async function createVoiceChannel(voiceState: VoiceState) {
