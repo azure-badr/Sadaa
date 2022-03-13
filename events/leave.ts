@@ -1,3 +1,4 @@
+import { DiscordAPIError } from "@discordjs/rest";
 import { VoiceState } from "discord.js";
 import { isVoiceChannelActive, deleteActiveVoiceChannel } from "../utils/vc";
 
@@ -16,5 +17,10 @@ export default {
 
     channel.delete()
       .then(async () => await deleteActiveVoiceChannel(oldState.channelId))
+      .catch((error: DiscordAPIError) => {
+        if (error.message === "Unknown Channel")
+          return;
+      })
+
   }
 }
