@@ -1,5 +1,5 @@
 import { Channel } from "discord.js";
-import { deleteActiveVoiceChannel, isVoiceChannelActive } from "../utils/vc";
+import { deleteActiveVoiceChannel, removeSavedVoiceChannel } from "../utils/vc";
 
 export default {
   name: "channelDelete",
@@ -8,9 +8,7 @@ export default {
     if (!channel.isVoice())
       return
 
-    if (!(await isVoiceChannelActive(channel.id)))
-      return;
-
-    await deleteActiveVoiceChannel(channel.id)
+    await deleteActiveVoiceChannel(channel.id);
+    await removeSavedVoiceChannel(channel.id);
   }
 }

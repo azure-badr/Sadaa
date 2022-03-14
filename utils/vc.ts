@@ -53,3 +53,18 @@ export async function getActiveVoiceChannels(): Promise<Array<string>> {
 export async function isVoiceChannelActive(voiceChannelId: string | any): Promise<boolean> {
   return (await getActiveVoiceChannels()).includes(voiceChannelId);
 }
+
+export async function isVoiceChannelSaved(voiceChannelId: string | any): Promise<boolean> {
+  return (await client.sMembers("saved_voice_channels")).includes(voiceChannelId);
+}
+
+export async function saveVoiceChannel(voiceChannelId: string): Promise<void> {
+  if (await isVoiceChannelSaved(voiceChannelId)) return;
+
+  await client.sAdd("saved_voice_channels", voiceChannelId);
+}
+
+export async function removeSavedVoiceChannel(voiceChannelId: string): Promise<void> {
+  if (await isVoiceChannelSaved(voiceChannelId))
+    await client.sRem("saved_voice_channels", voiceChannelId);
+}

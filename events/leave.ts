@@ -1,7 +1,9 @@
 import { DiscordAPIError } from "@discordjs/rest";
 import { CategoryChannel, VoiceChannel, VoiceState } from "discord.js";
 
+
 import {
+  isVoiceChannelSaved,
   isVoiceChannelActive,
   deleteActiveVoiceChannel,
   removeVoiceChannelFromHashWithVcId
@@ -38,10 +40,10 @@ export default {
     if (!(await isVoiceChannelActive(oldState.channelId)))
       return;
     
-    // if (isVoiceChannelSaved) {
-    //   await moveToIdleCategory(channel as VoiceChannel);
-    //   return;
-    // }
+    if (await isVoiceChannelSaved(channel.id)) {
+      await moveToIdleCategory(channel as VoiceChannel);
+      return;
+    }
 
     channel.delete()
       .then(async () => {
