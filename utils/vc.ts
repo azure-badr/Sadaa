@@ -53,8 +53,11 @@ export async function isVoiceChannelActive(voiceChannelId: string | any): Promis
   return (await getActiveVoiceChannels()).includes(voiceChannelId);
 }
 
-export async function isVoiceChannelSaved(voiceChannelId: string | any): Promise<boolean> {
-  return (await client.sMembers("saved_voice_channels")).includes(voiceChannelId);
+export async function isVoiceChannelSaved(voiceChannelId: string | GuildMember): Promise<boolean | string> {
+  if (typeof voiceChannelId === "string")
+    return (await client.sMembers("saved_voice_channels")).includes(voiceChannelId);
+
+  return await getVoiceChannelFromHash(voiceChannelId.id) as string;
 }
 
 export async function saveVoiceChannel(voiceChannelId: string): Promise<void> {
