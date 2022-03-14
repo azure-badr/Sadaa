@@ -23,7 +23,8 @@ export default {
             
             await voiceChannel?.edit({ name: "test" });
             return interaction.reply("Renamed your voice channel");
-          });
+          })
+          .catch((error) => interaction.reply(`Failed to rename your voice channel, ${error}`));
       })
       .catch(error => console.log(error))
   }
