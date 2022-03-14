@@ -48,6 +48,19 @@ export async function removeVoiceChannelFromHash(memberId: string): Promise<void
   await client.disconnect()
 }
 
+export async function removeVoiceChannelFromHashWithVcId(voiceChannelId: string): Promise<void> {
+  const client = createClient();
+  await client.connect();
+
+  const memberVoiceChannels: any = await client.hGetAll("voice_channel_members");
+  Object.keys(memberVoiceChannels).forEach(async memberId => {
+    if (memberVoiceChannels[memberId] === voiceChannelId)
+      await client.hDel("voice_channel_members", memberId);
+  }, async () => {
+    await client.disconnect();
+  })
+}
+
 export async function deleteActiveVoiceChannel(voiceChannelId: string | any): Promise<void> {
   const client = createClient();
   await client.connect();
