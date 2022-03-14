@@ -5,7 +5,12 @@ import { getVoiceChannelFromHash } from "../utils/vc";
 export default {
   data: new SlashCommandBuilder()
     .setName("name")
-    .setDescription("Rename your voice channel"),
+    .setDescription("Rename your voice channel")
+    .addStringOption((option) => option
+      .setName("name")
+      .setDescription("The new name of your voice channel")
+      .setRequired(true)
+    ),
   async execute(interaction: CommandInteraction) {
     const member = interaction.member as GuildMember;
     const guild = interaction.guild;
@@ -16,14 +21,8 @@ export default {
           return interaction.reply("You are not in a voice channel");
 
         const voiceChannel = guild?.channels.cache.get(channelId);
-        voiceChannel?.edit({ name: member.displayName })
-          .then(async () => {
-            const voiceChannelId = await getVoiceChannelFromHash(member.id);
-            const voiceChannel = guild?.channels.cache.get(voiceChannelId as string);
-            
-            await voiceChannel?.edit({ name: "test" });
-            return interaction.reply("Renamed your voice channel");
-          })
+        voiceChannel?.edit({ name: interaction.options.get("name")?.value as string })
+          .then(() => interaction.reply(`Renamed your voice channel to ${interaction.options.get("name")?.value}`))
           .catch((error) => interaction.reply(`Failed to rename your voice channel, ${error}`));
       })
       .catch(error => console.log(error))
