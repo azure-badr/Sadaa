@@ -67,6 +67,8 @@ export async function saveVoiceChannel(voiceChannelId: string): Promise<void> {
 }
 
 export async function removeSavedVoiceChannel(voiceChannelId: string): Promise<void> {
-  if (await isVoiceChannelSaved(voiceChannelId))
+  if (await isVoiceChannelSaved(voiceChannelId)) {
+    await removeVoiceChannelFromHashWithVcId(voiceChannelId);
     await client.sRem("saved_voice_channels", voiceChannelId);
+  }
 }
