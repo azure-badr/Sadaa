@@ -57,6 +57,7 @@ export async function removeVoiceChannelFromHashWithVcId(voiceChannelId: string)
 
 export async function deleteActiveVoiceChannel(voiceChannelId: string | any): Promise<void> {
   await client.sRem("voice_channels", voiceChannelId);
+  await removeVoiceChannelFromHashWithVcId(voiceChannelId);
 }
 
 export async function getActiveVoiceChannels(): Promise<Array<string>> {
