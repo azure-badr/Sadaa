@@ -1,4 +1,4 @@
-import { CategoryChannel, GuildMember, VoiceState } from "discord.js"
+import { CategoryChannel, GuildMember, VoiceChannel, VoiceState } from "discord.js"
 import { ChannelTypes } from "discord.js/typings/enums";
 
 import {
@@ -8,10 +8,9 @@ import {
   defaultUserLimit,
   defaultBitrate
 } from "../config.json";
-import { addActiveVoiceChannel } from "../utils/vc";
+import { addActiveVoiceChannel, isVoiceChannelSaved } from "../utils/vc";
 
 async function createVoiceChannel(voiceState: VoiceState) {
-  const client = voiceState.client;
   const guild = voiceState.guild;
   const member = voiceState.member as GuildMember;
 
@@ -46,6 +45,18 @@ async function createVoiceChannel(voiceState: VoiceState) {
   }
 }
 
+async function moveToActiveCategory(memberId: string, voiceChannel: VoiceChannel): Promise<VoiceChannel> {
+  const guild = voiceChannel.guild;
+  const activeCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
+
+  await voiceChannel.setParent(activeCategory, { lockPermissions: false });
+  await voiceChannel.permissionOverwrites.edit(guild.roles.everyone, { VIEW_CHANNEL: true })
+
+  addActiveVoiceChannel(memberId, voiceChannel.id);
+
+  return voiceChannel;
+}
+
 export default {
   name: "voiceStateUpdate",
   once: false,
@@ -55,6 +66,19 @@ export default {
     if (newState.channelId != voiceChannelId) return;
     
     const member = newState.member;
+
+    const savedChannelId = await isVoiceChannelSaved(member as GuildMember);
+    if (savedChannelId) {
+      const voiceChannel = member?.guild?.channels.cache.get(savedChannelId as string) as VoiceChannel;
+      moveToActiveCategory(member?.id as string, voiceChannel)
+        .then((channel) => {
+          member?.voice
+            .setChannel(channel)
+            .catch(err => console.log(err))
+        })
+
+      return;
+    }
 
     createVoiceChannel(newState)
       .then(channel => {
