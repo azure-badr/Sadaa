@@ -28,7 +28,7 @@ export default {
         })
           .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
-            interaction.reply(`Allowed ${memberToAllow.user.username} to the voice channel.`);
+            return interaction.reply(`Allowed ${memberToAllow.user.username} to the voice channel.`);
           });
       })
       .catch(error => console.log(error))

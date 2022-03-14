@@ -22,7 +22,7 @@ export default {
         })
         .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
-            interaction.reply("The voice channel has been unlocked");
+            return interaction.reply("The voice channel has been unlocked");
           });
       })
       .catch(error => console.log(error))

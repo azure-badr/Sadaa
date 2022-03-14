@@ -29,7 +29,7 @@ export default {
         })
         .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
-            interaction.reply(`Kicked ${memberToKick.user.username} from the voice channel. \nThey can no longer join.`);
+            return interaction.reply(`Kicked ${memberToKick.user.username} from the voice channel. \nThey can no longer join.`);
           });
       })
       .catch(error => console.log(error))
