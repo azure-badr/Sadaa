@@ -3,6 +3,10 @@ import { createClient } from "redis";
 
 import { applicationId } from "../config.json";
 
+const client = createClient();
+client.connect()
+  .then(() => console.log("Redis client connected"));
+
 export async function isVoiceChannelSaved(voiceChannel: VoiceChannel): Promise<boolean | undefined> {
   
   /*
@@ -19,65 +23,33 @@ export async function isVoiceChannelSaved(voiceChannel: VoiceChannel): Promise<b
 }
 
 export async function addActiveVoiceChannel(memberId: string, voiceChannelId: string): Promise<void> {
-  const client = createClient();
-  await client.connect();
-
   await client.sAdd("voice_channels", voiceChannelId);
   await client.hSet("voice_channel_members", memberId, voiceChannelId);
-
-  await client.disconnect()
 }
 
 export async function getVoiceChannelFromHash(memberId: string): Promise<string | undefined> {
-  const client = createClient();
-  await client.connect();
-
   const voiceChannelId = await client.hGet("voice_channel_members", memberId);
-
-  await client.disconnect()
-
   return voiceChannelId;
 }
 
 export async function removeVoiceChannelFromHash(memberId: string): Promise<void> {
-  const client = createClient();
-  await client.connect();
-
   await client.hDel("voice_channel_members", memberId);
-
-  await client.disconnect()
 }
 
 export async function removeVoiceChannelFromHashWithVcId(voiceChannelId: string): Promise<void> {
-  const client = createClient();
-  await client.connect();
-
   const memberVoiceChannels: any = await client.hGetAll("voice_channel_members");
   Object.keys(memberVoiceChannels).forEach(async memberId => {
     if (memberVoiceChannels[memberId] === voiceChannelId)
       await client.hDel("voice_channel_members", memberId);
-  }, async () => {
-    await client.disconnect();
-  })
+  });
 }
 
 export async function deleteActiveVoiceChannel(voiceChannelId: string | any): Promise<void> {
-  const client = createClient();
-  await client.connect();
-
   await client.sRem("voice_channels", voiceChannelId);
-
-  await client.disconnect()
 }
 
 export async function getActiveVoiceChannels(): Promise<Array<string>> {
-  const client = createClient();
-  await client.connect();
-
   const voiceChannels = await client.sMembers("voice_channels");
-
-  await client.disconnect()
-
   return voiceChannels;
 }
 
