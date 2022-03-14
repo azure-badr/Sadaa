@@ -2,7 +2,6 @@ import { CategoryChannel, GuildMember, VoiceChannel, VoiceState } from "discord.
 import { ChannelTypes } from "discord.js/typings/enums";
 
 import {
-  applicationId,
   voiceChannelId,
   categoryId,
   defaultUserLimit,
@@ -23,7 +22,7 @@ async function createVoiceChannel(voiceState: VoiceState) {
       userLimit: defaultUserLimit,
       permissionOverwrites: [
         {
-          id: member?.id || '',
+          id: member?.id,
           allow: [
             "MANAGE_CHANNELS",
             "CONNECT",
@@ -36,7 +35,6 @@ async function createVoiceChannel(voiceState: VoiceState) {
       ]
     });
     
-    // Add voice channel to redis server
     addActiveVoiceChannel(member?.id, memberChannel.id);
     return memberChannel;
 
@@ -74,7 +72,7 @@ export default {
         .then((channel) => {
           member?.voice
             .setChannel(channel)
-            .catch(err => console.log(err))
+            .catch(() => { return; })
         })
 
       return;
@@ -82,8 +80,9 @@ export default {
 
     createVoiceChannel(newState)
       .then(channel => {
-        member?.voice.setChannel(channel)
-          .catch(console.error);
+        member?.voice
+          .setChannel(channel)
+          .catch(() => { return; });
       })
       .catch(console.error)
   }
