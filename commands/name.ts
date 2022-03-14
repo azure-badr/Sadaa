@@ -17,7 +17,13 @@ export default {
 
         const voiceChannel = guild?.channels.cache.get(channelId);
         voiceChannel?.edit({ name: member.displayName })
-          .then(() => interaction.reply("Your voice channel has been renamed"));
+          .then(async () => {
+            const voiceChannelId = await getVoiceChannelFromHash(member.id);
+            const voiceChannel = guild?.channels.cache.get(voiceChannelId as string);
+            
+            await voiceChannel?.edit({ name: "test" });
+            return interaction.reply("Renamed your voice channel");
+          });
       })
       .catch(error => console.log(error))
   }
