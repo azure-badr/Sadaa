@@ -1,4 +1,4 @@
-import { DiscordAPIError } from "@discordjs/rest";
+import { DiscordAPIError } from "discord.js";
 import { CategoryChannel, VoiceChannel, VoiceState } from "discord.js";
 
 
@@ -19,14 +19,16 @@ async function removeFromSavedState(channelId: string) {
 async function moveToIdleCategory(voiceChannel: VoiceChannel) {
   await deleteActiveVoiceChannel(voiceChannel.id);
   
-  await voiceChannel.permissionOverwrites.edit(voiceChannel.guild.roles.everyone, {
-    VIEW_CHANNEL: false,
-  })
-  
-  const category = voiceChannel.guild.channels.cache.get(idleCategoryId) as CategoryChannel;
-  await voiceChannel.setParent(category, {
-    lockPermissions: false,
-  });
+  try {
+    await voiceChannel.permissionOverwrites.edit(voiceChannel.guild.roles.everyone, {
+      VIEW_CHANNEL: false,
+    })
+    
+    const category = voiceChannel.guild.channels.cache.get(idleCategoryId) as CategoryChannel;
+    await voiceChannel.setParent(category, {
+      lockPermissions: false,
+    });
+  } catch (error) {}
 }
 
 export default {

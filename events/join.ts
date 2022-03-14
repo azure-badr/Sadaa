@@ -25,6 +25,7 @@ async function createVoiceChannel(voiceState: VoiceState) {
         {
           id: member?.id || '',
           allow: [
+            "MANAGE_CHANNELS",
             "CONNECT",
             "SPEAK", 
             "MUTE_MEMBERS", 
