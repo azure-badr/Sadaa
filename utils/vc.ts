@@ -22,6 +22,17 @@ export async function isVoiceChannelSaved(voiceChannel: VoiceChannel): Promise<b
   return permission?.has("CREATE_INSTANT_INVITE");
 }
 
+export async function saveVoiceChannel(voiceChannel: VoiceChannel): Promise<void> {
+  const client = voiceChannel.guild.members.cache.get(applicationId) as GuildMember;
+
+  if (await isVoiceChannelSaved(voiceChannel))
+    return
+  
+  voiceChannel.permissionOverwrites.edit(client.id, {
+    CREATE_INSTANT_INVITE: true
+  });
+}
+
 export async function addActiveVoiceChannel(memberId: string, voiceChannelId: string): Promise<void> {
   await client.sAdd("voice_channels", voiceChannelId);
   await client.hSet("voice_channel_members", memberId, voiceChannelId);

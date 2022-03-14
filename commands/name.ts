@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember } from "discord.js";
-import { getVoiceChannelFromHash } from "../utils/vc";
+import { CommandInteraction, GuildMember, VoiceChannel } from "discord.js";
+import { getVoiceChannelFromHash, saveVoiceChannel } from "../utils/vc";
 
 export default {
   data: new SlashCommandBuilder()
@@ -22,7 +22,10 @@ export default {
 
         const voiceChannel = guild?.channels.cache.get(channelId);
         voiceChannel?.edit({ name: interaction.options.get("name")?.value as string })
-          .then(() => interaction.reply(`Renamed your voice channel to ${interaction.options.get("name")?.value}`))
+          .then(async () => {
+            await saveVoiceChannel(voiceChannel as VoiceChannel);
+            return interaction.reply(`Renamed your voice channel to ${interaction.options.get("name")?.value}`)
+          })
           .catch((error) => interaction.reply(`Failed to rename your voice channel, ${error}`));
       })
       .catch(error => console.log(error))
