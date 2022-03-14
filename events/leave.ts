@@ -1,6 +1,31 @@
 import { DiscordAPIError } from "@discordjs/rest";
-import { VoiceState } from "discord.js";
-import { isVoiceChannelActive, deleteActiveVoiceChannel, removeVoiceChannelFromHashWithVcId } from "../utils/vc";
+import { CategoryChannel, VoiceChannel, VoiceState } from "discord.js";
+
+import {
+  isVoiceChannelActive,
+  deleteActiveVoiceChannel,
+  removeVoiceChannelFromHashWithVcId
+} from "../utils/vc";
+
+import { idleCategoryId } from "../config.json";
+
+async function removeFromSavedState(channelId: string) {
+  await deleteActiveVoiceChannel(channelId);
+  await removeVoiceChannelFromHashWithVcId(channelId);
+}
+
+async function moveToIdleCategory(voiceChannel: VoiceChannel) {
+  await deleteActiveVoiceChannel(voiceChannel.id);
+  
+  await voiceChannel.permissionOverwrites.edit(voiceChannel.guild.roles.everyone, {
+    VIEW_CHANNEL: false,
+  })
+  
+  const category = voiceChannel.guild.channels.cache.get(idleCategoryId) as CategoryChannel;
+  await voiceChannel.setParent(category, {
+    lockPermissions: false,
+  });
+}
 
 export default {
   name: "voiceStateUpdate",
@@ -12,11 +37,15 @@ export default {
     
     if (!(await isVoiceChannelActive(oldState.channelId)))
       return;
+    
+    // if (isVoiceChannelSaved) {
+    //   await moveToIdleCategory(channel as VoiceChannel);
+    //   return;
+    // }
 
     channel.delete()
       .then(async () => {
-        await deleteActiveVoiceChannel(oldState.channelId);
-        await removeVoiceChannelFromHashWithVcId(oldState.channelId as string);
+        await removeFromSavedState(channel.id as string);
       })
       .catch((error: DiscordAPIError) => {
         if (error.message === "Unknown Channel")

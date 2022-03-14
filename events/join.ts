@@ -23,12 +23,6 @@ async function createVoiceChannel(voiceState: VoiceState) {
       bitrate: defaultBitrate,
       userLimit: defaultUserLimit,
       permissionOverwrites: [
-        // Overwrite for client
-        {
-          id: applicationId,
-          deny: ["CREATE_INSTANT_INVITE"] // Indication of a saved voice channel
-        },
-        // Overwrite for user
         {
           id: member?.id || '',
           allow: [

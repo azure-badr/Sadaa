@@ -7,31 +7,6 @@ const client = createClient();
 client.connect()
   .then(() => console.log("Redis client connected"));
 
-export async function isVoiceChannelSaved(voiceChannel: VoiceChannel): Promise<boolean | undefined> {
-  
-  /*
-  This function is used to check if a voice channel is saved by 
-  checking if a voice channel has CREATE_INSTANT_INVITE permissions. 
-  Everytime a voice channel is saved, it will enable CREATE_INSTANT_INVITE permission
-  for the bot to indicate that the channel is saved
-  */
-  
-  const client = voiceChannel.guild.members.cache.get(applicationId) as GuildMember;
-  const permission = voiceChannel.permissionsFor(client.id);
-
-  return permission?.has("CREATE_INSTANT_INVITE");
-}
-
-export async function saveVoiceChannel(voiceChannel: VoiceChannel): Promise<void> {
-  const client = voiceChannel.guild.members.cache.get(applicationId) as GuildMember;
-
-  if (await isVoiceChannelSaved(voiceChannel))
-    return
-  
-  voiceChannel.permissionOverwrites.edit(client.id, {
-    CREATE_INSTANT_INVITE: true
-  });
-}
 
 export async function addActiveVoiceChannel(memberId: string, voiceChannelId: string): Promise<void> {
   await client.sAdd("voice_channels", voiceChannelId);
@@ -45,6 +20,16 @@ export async function getVoiceChannelFromHash(memberId: string): Promise<string 
 
 export async function removeVoiceChannelFromHash(memberId: string): Promise<void> {
   await client.hDel("voice_channel_members", memberId);
+}
+
+export async function getVoiceChannelFromHashWithVcId(voiceChannelId: string): Promise<string | undefined> {
+  const memberVoiceChannels: any = await client.hGetAll("voice_channel_members");
+  Object.keys(memberVoiceChannels).forEach(async memberId => {
+    if (memberVoiceChannels[memberId] === voiceChannelId)
+      return memberId;
+  });
+
+  return undefined;
 }
 
 export async function removeVoiceChannelFromHashWithVcId(voiceChannelId: string): Promise<void> {
