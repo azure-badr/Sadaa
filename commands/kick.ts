@@ -23,7 +23,9 @@ export default {
         const voiceChannel = guild?.channels.cache.get(channelId) as VoiceChannel;
         const memberToKick = interaction.options.get("user")?.member as GuildMember;
         
-        memberToKick.voice.setChannel(null);
+        if (voiceChannel.members.has(memberToKick.id)) 
+          memberToKick.voice.setChannel(null);
+        
         voiceChannel.permissionOverwrites.edit(memberToKick, {
           CONNECT: false
         })
