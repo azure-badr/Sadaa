@@ -1,4 +1,4 @@
-import { CategoryChannel, VoiceState } from "discord.js"
+import { CategoryChannel, GuildMember, VoiceState } from "discord.js"
 import { ChannelTypes } from "discord.js/typings/enums";
 
 import {
@@ -13,7 +13,7 @@ import { addActiveVoiceChannel } from "../utils/vc";
 async function createVoiceChannel(voiceState: VoiceState) {
   const client = voiceState.client;
   const guild = voiceState.guild;
-  const member = voiceState.member;
+  const member = voiceState.member as GuildMember;
 
   const channelCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
@@ -46,7 +46,7 @@ async function createVoiceChannel(voiceState: VoiceState) {
     });
     
     // Add voice channel to redis server
-    addActiveVoiceChannel(memberChannel.id);
+    addActiveVoiceChannel(member?.id, memberChannel.id);
     return memberChannel;
 
   } catch (error) {

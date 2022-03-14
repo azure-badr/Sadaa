@@ -18,11 +18,32 @@ export async function isVoiceChannelSaved(voiceChannel: VoiceChannel): Promise<b
   return permission?.has("CREATE_INSTANT_INVITE");
 }
 
-export async function addActiveVoiceChannel(voiceChannelId: string): Promise<void> {
+export async function addActiveVoiceChannel(memberId: string, voiceChannelId: string): Promise<void> {
   const client = createClient();
   await client.connect();
 
   await client.sAdd("voice_channels", voiceChannelId);
+  await client.hSet("voice_channel_members", memberId, voiceChannelId);
+
+  await client.disconnect()
+}
+
+export async function getVoiceChannelFromHash(memberId: string): Promise<string | undefined> {
+  const client = createClient();
+  await client.connect();
+
+  const voiceChannelId = await client.hGet("voice_channel_members", memberId);
+
+  await client.disconnect()
+
+  return voiceChannelId;
+}
+
+export async function removeVoiceChannelFromHash(memberId: string): Promise<void> {
+  const client = createClient();
+  await client.connect();
+
+  await client.hDel("voice_channel_members", memberId);
 
   await client.disconnect()
 }
