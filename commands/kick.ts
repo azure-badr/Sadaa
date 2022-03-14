@@ -23,10 +23,11 @@ export default {
         const voiceChannel = guild?.channels.cache.get(channelId) as VoiceChannel;
         const memberToKick = interaction.options.get("user")?.member as GuildMember;
         
+        memberToKick.voice.setChannel(null);
         voiceChannel.permissionOverwrites.edit(memberToKick, {
           CONNECT: false
         })
-          .then(async () => {
+        .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
             interaction.reply(`Kicked ${memberToKick.user.username} from the voice channel. \nThey can no longer join.`);
           });
