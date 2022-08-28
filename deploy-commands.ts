@@ -4,7 +4,7 @@ import { Routes } from "discord-api-types/v9"
 import { readdirSync } from "fs";
 import path from "path";
 
-import { applicationId, guildId, token } from "./config.ts";
+import { applicationId, guildId, token } from "./config";
 import SlashCommandObject from "./models/SlashCommandObject";
 
 const commandFiles = readdirSync(path.join(__dirname, "/commands/")).filter(file => file);

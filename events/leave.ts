@@ -9,7 +9,7 @@ import {
   removeVoiceChannelFromHashWithVcId
 } from "../utils/vc";
 
-import { idleCategoryId } from "../config.ts";
+import { idleCategoryId } from "../config";
 
 async function removeFromSavedState(channelId: string) {
   await deleteActiveVoiceChannel(channelId);

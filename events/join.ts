@@ -6,7 +6,7 @@ import {
   categoryId,
   defaultUserLimit,
   defaultBitrate
-} from "../config.ts";
+} from "../config";
 import { addActiveVoiceChannel, isVoiceChannelSaved } from "../utils/vc";
 
 async function createVoiceChannel(voiceState: VoiceState) {
