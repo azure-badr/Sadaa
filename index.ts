@@ -1,6 +1,6 @@
 import path from "path";
 import { readdirSync } from "fs";
-import { token } from "./config.js";
+import { token } from "./config.ts";
 
 import SlashCommandObject from "./models/SlashCommandObject";
 import EventObject from "./models/EventObject";
