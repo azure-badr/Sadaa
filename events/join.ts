@@ -5,9 +5,8 @@ import {
   voiceChannelId,
   categoryId,
   defaultUserLimit,
-  defaultBitrate,
-  mehmaanRoleId,
-} from "../config.json";
+  defaultBitrate
+} from "../config";
 import { addActiveVoiceChannel, isVoiceChannelSaved } from "../utils/vc";
 
 async function createVoiceChannel(voiceState: VoiceState) {
@@ -23,10 +22,6 @@ async function createVoiceChannel(voiceState: VoiceState) {
       userLimit: defaultUserLimit,
       permissionOverwrites: [
         {
-          id: mehmaanRoleId,
-          deny: ["VIEW_CHANNEL"]
-        },
-        {
           id: member?.id,
           allow: [
             "MANAGE_CHANNELS",
@@ -35,7 +30,6 @@ async function createVoiceChannel(voiceState: VoiceState) {
             "MUTE_MEMBERS", 
             "DEAFEN_MEMBERS", 
             "MOVE_MEMBERS",
-            "MANAGE_ROLES",
           ],
         }
       ]
