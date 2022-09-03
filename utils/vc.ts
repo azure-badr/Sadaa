@@ -1,11 +1,9 @@
 import { GuildMember, VoiceChannel } from "discord.js";
 import { createClient } from "redis";
 
-import { applicationId } from "../config";
+import { applicationId } from "../config.json";
 
-const client = createClient({
-  url: `redis://default:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
-});
+const client = createClient();
 client.connect()
   .then(() => console.log("Redis client connected"));
 
