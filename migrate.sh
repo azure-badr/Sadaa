@@ -5,7 +5,7 @@ function redis_target() {
 }
 
 redis-cli -h localhost -p 6379 -n 0 keys \* | while read key; do
- if [ $key = "saved_voice_channels" ] || [ $key = "voice_channel_members" ]; then
+ if [ $key = "saved_voice_channels" ] || [ $key = "voice_channel_members" ] || [ $key = "voice_channels" ]; then
   printf "Moving $key..."
   redis-cli -h localhost -p 6379 --raw DUMP $key | head -c-1 | redis_target -x RESTORE $key 0
  fi
