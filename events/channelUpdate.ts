@@ -9,6 +9,13 @@ export default {
     const newMehmaanPermissionOverwrites =
       newChannel.permissionOverwrites.cache.get(mehmaanChannelId);
     
+    if (!newMehmaanPermissionOverwrites) {
+      newChannel.permissionOverwrites.edit(mehmaanChannelId, {
+        VIEW_CHANNEL: false
+      });
+      return
+    }
+    
     if (newMehmaanPermissionOverwrites?.allow.has(PermissionFlagsBits.ViewChannel)) {
       await newMehmaanPermissionOverwrites.edit({
         VIEW_CHANNEL: false
