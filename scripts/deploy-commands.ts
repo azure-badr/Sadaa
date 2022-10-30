@@ -4,14 +4,14 @@ import { Routes } from "discord-api-types/v9"
 import { readdirSync } from "fs";
 import path from "path";
 
-import { applicationId, guildId, token } from "./config";
-import SlashCommandObject from "./models/SlashCommandObject";
+import { applicationId, guildId, token } from "../config";
+import SlashCommandObject from "../models/SlashCommandObject";
 
-const commandFiles = readdirSync(path.join(__dirname, "/commands/")).filter(file => file);
+const commandFiles = readdirSync(path.join(__dirname, "../commands/")).filter(file => file);
 const commands: Array<SlashCommandBuilder> = [];
 
 commandFiles.forEach(file => {
-  const { data: command } = require(`./commands/${file}`).default as SlashCommandObject;
+  const { data: command } = require(path.join(__dirname, `../commands/${file}`)).default as SlashCommandObject;
   commands.push(command);
 })
 
