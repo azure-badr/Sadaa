@@ -5,7 +5,7 @@ import { mehmaanChannelId, categoryId } from "../config"
 export default {
   name: "channelUpdate",
   execute: async (oldChannel: GuildChannel, newChannel: GuildChannel): Promise<void> => {
-    if (!oldChannel.parentId === categoryId)
+    if (oldChannel.parentId !== categoryId)
       return
     
     // Check if permissions for Mehmaan channel is changed, then revert it
