@@ -7,3 +7,6 @@ export const categoryId: any = process.env.CATEGORY_ID;
 export const idleCategoryId: any = process.env.IDLE_CATEGORY_ID;
 export const defaultUserLimit: any = 5 || process.env.DEFAULT_USER_LIMIT;
 export const defaultBitrate: any = 96000 || process.env.DEFAULT_BITRATE;
+export const redisPassword: any = process.env.REDISPASSWORD;
+export const redisHost: any = process.env.REDISHOST;
+export const redisPort: any = process.env.REDISPORT;
