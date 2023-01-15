@@ -33,6 +33,7 @@ export default {
           color: 0x303136,
         }
 
+        const voiceChannelPermissionsSorted = [];
         const permissions = voiceChannel.permissionOverwrites.cache
         for (const permission of permissions.values()) {
           if (permission.type === "member") {
@@ -41,7 +42,10 @@ export default {
               continue;
             
             const allowedToConnect = permission.allow.has(PermissionFlagsBits.Connect);
-            embed.description += `\n(user) **${member.displayName}**: ${allowedToConnect ? "allowed" : "denied"}`
+            voiceChannelPermissionsSorted.push({
+              name: member.displayName,
+              allowedToConnect,
+            });
           }
 
           if (permission.type === "role") {
@@ -53,13 +57,30 @@ export default {
               continue;
             
             if (role.id === mehmaanChannelId) {
-              embed.description += `\n(role) **Mehmaan**: this role is automatically added to all voice channels`
+              voiceChannelPermissionsSorted.push({
+                name: role.name,
+                allowedToConnect: permission.allow.has(PermissionFlagsBits.Connect),
+              });
               continue;
             }
             
             const allowedToConnect = permission.allow.has(PermissionFlagsBits.Connect);
-            embed.description += `\n(role) **${role.name}**: ${allowedToConnect ? "allowed" : "denied"}`
+            voiceChannelPermissionsSorted.push({
+              name: role.name,
+              allowedToConnect,
+            });
           }
+
+          voiceChannelPermissionsSorted.sort((first, second) => {
+            if (first.allowedToConnect === second.allowedToConnect)
+              return first.name.localeCompare(second.name);
+            
+            return first.allowedToConnect ? -1 : 1;
+          });
+
+          embed.description = voiceChannelPermissionsSorted.map(permission => {
+            return `${permission.allowedToConnect ? "allowed" : "denied"} ${permission.name}`;
+          }).join('\n');
         }
         return interaction.reply({ embeds: [embed] });
     }
