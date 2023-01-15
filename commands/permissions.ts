@@ -31,9 +31,6 @@ export default {
           title: `Permissions for your channel`,
           description: '',
           color: 0x303136,
-          footer: {
-            text: "To add or remove permissions, use /permissions add or /permissions remove"
-          }
         }
 
         const permissions = voiceChannel.permissionOverwrites.cache
