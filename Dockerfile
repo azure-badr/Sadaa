@@ -9,6 +9,6 @@ COPY . .
 RUN npm run build
 
 # Run deploy-commands.js to register slash commands
-RUN node ./prod/scripts/deploy-commands.js
+RUN npm run deploy
 
 CMD ["node", "./prod/index.js"]
