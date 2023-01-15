@@ -43,6 +43,7 @@ export default {
             
             const allowedToConnect = permission.allow.has(PermissionFlagsBits.Connect);
             voiceChannelPermissionsSorted.push({
+              type: "member",
               name: member.displayName,
               allowedToConnect,
             });
@@ -56,16 +57,9 @@ export default {
             if (role.name === "@everyone")
               continue;
             
-            if (role.id === mehmaanChannelId) {
-              voiceChannelPermissionsSorted.push({
-                name: role.name,
-                allowedToConnect: permission.allow.has(PermissionFlagsBits.Connect),
-              });
-              continue;
-            }
-            
             const allowedToConnect = permission.allow.has(PermissionFlagsBits.Connect);
             voiceChannelPermissionsSorted.push({
+              type: "role",
               name: role.name,
               allowedToConnect,
             });
@@ -79,7 +73,7 @@ export default {
           });
 
           embed.description = voiceChannelPermissionsSorted.map(permission => {
-            return `${permission.allowedToConnect ? "allowed" : "denied"} ${permission.name}`;
+            return `(${permission.type}) **${permission.name}**: ${permission.allowedToConnect ? "allowed" : "denied"} `;
           }).join('\n');
         }
         return interaction.reply({ embeds: [embed] });
