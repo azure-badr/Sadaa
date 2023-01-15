@@ -7,7 +7,8 @@ const client = createClient({
   url: `redis://default:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
 });
 client.connect()
-  .then(() => console.log("Redis client connected"));
+  .then(() => console.log("Redis client connected"))
+  .catch(err => console.error(err));
 
 
 export async function addActiveVoiceChannel(memberId: string, voiceChannelId: string): Promise<void> {
