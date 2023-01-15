@@ -8,4 +8,7 @@ COPY . .
 
 RUN npm run build
 
-cmd ["node", "./prod/index.js"]
+# Run deploy-commands.js to register slash commands
+RUN node ./prod/deploy-commands.js
+
+CMD ["node", "./prod/index.js"]
