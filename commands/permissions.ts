@@ -43,7 +43,7 @@ export default {
             
             const allowedToConnect = permission.allow.has(PermissionFlagsBits.Connect);
             voiceChannelPermissionsSorted.push({
-              type: "member",
+              type: "user",
               name: member.displayName,
               allowedToConnect,
             });
