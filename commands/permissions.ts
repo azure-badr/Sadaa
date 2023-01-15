@@ -41,7 +41,7 @@ export default {
           if (permission.type === "member") {
             const member = await guild?.members.fetch(permission.id) as GuildMember;
             if (!member)
-              return;
+              continue;
             
             const allowedToConnect = permission.allow.has(PermissionFlagsBits.Connect);
             embed.description += `\n(user) **${member.displayName}**: ${allowedToConnect ? "allowed" : "denied"}`
@@ -50,11 +50,14 @@ export default {
           if (permission.type === "role") {
             const role = guild?.roles.cache.get(permission.id);
             if (!role)
-              return;
+              continue;
+            
+            if (role.name === "@everyone")
+              continue;
             
             if (role.id === mehmaanChannelId) {
               embed.description += `\n(role) **Mehmaan**: this role is automatically added to all voice channels`
-              return;
+              continue;
             }
             
             const allowedToConnect = permission.allow.has(PermissionFlagsBits.Connect);
