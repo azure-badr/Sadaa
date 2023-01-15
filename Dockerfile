@@ -6,6 +6,4 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
-
-CMD ["node", "./prod/index.js"]
+CMD ["npm", "start"]

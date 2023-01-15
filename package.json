@@ -5,7 +5,7 @@
   "main": "./production/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "npm run build",
+    "start": "npm run build && node ./prod/index.js",
     "deploy": "node ./prod/scripts/deploy-commands.js"
   },
   "author": "",
