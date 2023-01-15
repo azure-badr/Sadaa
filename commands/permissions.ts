@@ -12,28 +12,6 @@ export default {
     .setDescription("Change the permissions of your voice channel")
     .addSubcommand(subcommand =>
       subcommand
-        .setName("add")
-        .setDescription("Add a permission to your voice channel")
-        .addMentionableOption(option =>
-          option
-            .setName("name")
-            .setDescription("The name of the role or user to add")
-            .setRequired(true)
-        )
-    )
-    .addSubcommand(subcommand =>
-      subcommand
-        .setName("remove")
-        .setDescription("Remove a permission from your voice channel")
-        .addMentionableOption(option =>
-          option
-            .setName("name")
-            .setDescription("The name of the role or user to remove")
-            .setRequired(true)
-        )
-    )
-    .addSubcommand(subcommand =>
-      subcommand
         .setName("list")
         .setDescription("List the permissions of your voice channel")
     ),
@@ -47,12 +25,7 @@ export default {
       return interaction.reply("You are not in a voice channel");
     
     const voiceChannel = await guild?.channels.fetch(voiceChannelId) as VoiceChannel;
-
     switch (subcommand) {
-      case "add":
-        return interaction.reply("Add");
-      case "remove":
-        return interaction.reply("Remove");
       case "list":
         const embed = {
           title: `Permissions for your channel`,
