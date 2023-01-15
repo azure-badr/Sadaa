@@ -4,7 +4,7 @@ import { createClient } from "redis";
 import { applicationId } from "../config";
 
 const client = createClient({
-  url: `redis://default:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`
+  url: `redis://default:${process.env.REDISPASSWORD}@${process.env.REDISHOST}:${process.env.REDISPORT}`
 });
 client.connect()
   .then(() => console.log("Redis client connected"))
