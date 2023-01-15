@@ -7,6 +7,9 @@ import path from "path";
 import { applicationId, guildId, token } from "../config";
 import SlashCommandObject from "../models/SlashCommandObject";
 
+console.log("Deploying commands...");
+console.log(`Application ID: ${applicationId}`);
+
 const commandFiles = readdirSync(path.join(__dirname, "../commands/")).filter(file => file);
 const commands: Array<SlashCommandBuilder> = [];
 
