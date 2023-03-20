@@ -6,6 +6,7 @@ import SlashCommandObject from "./models/SlashCommandObject";
 import EventObject from "./models/EventObject";
 
 import { Client, Collection, Intents } from "discord.js";
+import ContextMenuObject from "./models/ContextMenuObject";
 
 const client = new Client({
   intents: [
@@ -27,29 +28,50 @@ eventFiles.forEach(file => {
   client.on(event.name, (...args: [any]) => event.execute(...args));
 })
 
-// Commands
+// Commands & Context Menus
 const commands = new Collection<string, SlashCommandObject>();
+const contextMenus = new Collection<string, ContextMenuObject>();
 
 const commandFiles = readdirSync(path.join(__dirname, "/commands/")).filter(file => file);
+const contextMenuFiles = readdirSync(path.join(__dirname, "/context_menus/")).filter(file => file);
 
 commandFiles.forEach(file => {
   const command: SlashCommandObject = require(`./commands/${file}`).default;
   commands.set(command.data.name, command);
-})
+});
+
+contextMenuFiles.forEach(file => {
+  const contextMenu: ContextMenuObject = require(`./context_menus/${file}`).default;
+  contextMenus.set(contextMenu.data.name, contextMenu);
+});
 
 client.on("interactionCreate", async interaction => {
-  if (!interaction.isCommand()) return;
+  if (interaction.isCommand()) {
+    const command = commands.get(interaction.commandName);
+    if (!command) return;
 
-  const command = commands.get(interaction.commandName);
-  if (!command) return;
+    try {
+      await command.execute(interaction);
+    } catch (error) {
+      console.error(error);
+      await interaction.reply({
+        content: "An error occured while executing this command", ephemeral: true
+      });
+    }
+  }
 
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    await interaction.reply({
-      content: "An error occured while executing this command", ephemeral: true
-    });
+  if (interaction.isContextMenu()) {
+    const contextMenu = contextMenus.get(interaction.commandName);
+    if (!contextMenu) return;
+
+    try {
+      await contextMenu.execute(interaction);
+    } catch (error) {
+      console.error(error);
+      await interaction.reply({
+        content: "An error occured while executing this interaction", ephemeral: true
+      });
+    }
   }
 })
 
