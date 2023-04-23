@@ -16,17 +16,37 @@ export default {
     const guild = interaction.guild;
 
     getVoiceChannelFromHash(member.id)
-      .then(channelId => {
+      .then(async channelId => {
         if (!channelId)
           return interaction.reply("You are not in a voice channel");
+        
+        const name = interaction.options.get("name")?.value as string;
+        if (!(name === "default")) {
+          await interaction.reply(
+            "Renaming voice channels has been disabled **for now** due to safety concerns.\n If you want to reset the name, type /name `default`."
+          );
 
+          return;
+        }
+        
         const voiceChannel = guild?.channels.cache.get(channelId);
-        voiceChannel?.edit({ name: interaction.options.get("name")?.value as string })
+        voiceChannel?.edit({ name: `${interaction.member?.user.username}'s VC` })
           .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
             return interaction.reply(`Renamed your voice channel to ${interaction.options.get("name")?.value}`)
           })
           .catch((error) => interaction.reply(`Failed to rename your voice channel, ${error}`));
+        
+        return;
+        
+        /*
+        voiceChannel?.edit({ name })
+          .then(async () => {
+            await saveVoiceChannel(voiceChannel.id);
+            return interaction.reply(`Renamed your voice channel to ${interaction.options.get("name")?.value}`)
+          })
+          .catch((error) => interaction.reply(`Failed to rename your voice channel, ${error}`));
+        */
       })
       .catch(error => console.log(error))
   }
