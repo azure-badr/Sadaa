@@ -37,7 +37,7 @@ export default {
         voiceChannel?.edit({ name: `${interaction.member?.user.username}'s VC` })
           .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
-            return interaction.reply(`Renamed your voice channel to ${interaction.options.get("name")?.value}`)
+            return interaction.reply(`Renamed your voice channel`)
           })
           .catch((error) => interaction.reply(`Failed to rename your voice channel, ${error}`));
         
