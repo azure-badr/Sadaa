@@ -23,8 +23,12 @@ export default {
         const name = interaction.options.get("name")?.value as string;
         if (!(name === "default")) {
           await interaction.reply(
-            "Renaming voice channels has been disabled **for now** due to safety concerns.\n If you want to reset the name, type /name `default`."
+            "Renaming voice channels has been disabled **for now** due to safety concerns.\nIf you want to reset the name, type `/name default`."
           );
+
+          await interaction.followUp(
+            { content: "If you want to rename your voice channel to something else, please ask Fauj.", ephemeral: true }
+          )
 
           return;
         }
