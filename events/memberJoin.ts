@@ -18,9 +18,5 @@ export default {
       await removeSavedVoiceChannel(voiceChannelId);
       return;
     }
-    
-    await voiceChannel.permissionOverwrites.edit(member, {
-      MANAGE_CHANNELS: true,
-    });
   }
 }

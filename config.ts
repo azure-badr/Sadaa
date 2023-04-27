@@ -1,5 +1,6 @@
 export const applicationId: any = process.env.APPLICATION_ID;
 export const guildId: any = process.env.GUILD_ID;
+export const modRoleId: any = process.env.MOD_ROLE_ID
 export const token: any = process.env.BOT_TOKEN;
 export const voiceChannelId: any = process.env.VOICE_CHANNEL_ID;
 export const mehmaanChannelId: any = process.env.MEHMAAN_CHANNEL_ID;

@@ -4,6 +4,7 @@ import { ChannelTypes } from "discord.js/typings/enums";
 import {
   voiceChannelId,
   categoryId,
+  modRoleId,
   defaultUserLimit,
   defaultBitrate
 } from "../config";
@@ -24,14 +25,17 @@ async function createVoiceChannel(voiceState: VoiceState) {
         {
           id: member?.id,
           allow: [
-            "MANAGE_CHANNELS",
             "CONNECT",
             "SPEAK", 
             "MUTE_MEMBERS", 
             "DEAFEN_MEMBERS", 
             "MOVE_MEMBERS",
           ],
-        }
+        },
+        {
+          id: modRoleId,
+          allow: ["MANAGE_CHANNELS"],
+        },
       ]
     });
     
