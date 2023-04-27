@@ -27,7 +27,7 @@ export default {
           memberToKick.voice.setChannel(null);
         
         voiceChannel.permissionOverwrites.edit(memberToKick, {
-          CONNECT: false
+          Connect: false,
         })
         .then(async () => {
             await saveVoiceChannel(voiceChannel.id);

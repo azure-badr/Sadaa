@@ -1,5 +1,4 @@
-import { CategoryChannel, GuildMember, VoiceChannel, VoiceState } from "discord.js"
-import { ChannelTypes } from "discord.js/typings/enums";
+import { CategoryChannel, ChannelType, GuildMember, VoiceChannel, VoiceState } from "discord.js"
 
 import {
   voiceChannelId,
@@ -9,34 +8,38 @@ import {
   defaultBitrate
 } from "../config";
 import { addActiveVoiceChannel, isVoiceChannelSaved } from "../utils/vc";
+import { PermissionFlagsBits } from "discord.js";
 
 async function createVoiceChannel(voiceState: VoiceState) {
   const guild = voiceState.guild;
   const member = voiceState.member as GuildMember;
 
-  const channelCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
   try {
-    const memberChannel = await channelCategory.createChannel(`${member.user.username}'s VC`, {
-      type: ChannelTypes.GUILD_VOICE,
+    const channelCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
+
+    const memberChannel = await guild.channels.create({
+      name: `${member.user.username}'s VC`,
+      type: ChannelType.GuildVoice,
       bitrate: defaultBitrate,
       userLimit: defaultUserLimit,
       permissionOverwrites: [
         {
           id: member?.id,
           allow: [
-            "CONNECT",
-            "SPEAK", 
-            "MUTE_MEMBERS", 
-            "DEAFEN_MEMBERS", 
-            "MOVE_MEMBERS",
+            PermissionFlagsBits.Connect,
+            PermissionFlagsBits.Speak,
+            PermissionFlagsBits.MuteMembers,
+            PermissionFlagsBits.DeafenMembers,
+            PermissionFlagsBits.MoveMembers,
           ],
         },
         {
           id: modRoleId,
-          allow: ["MANAGE_CHANNELS"],
+          allow: [PermissionFlagsBits.ManageChannels],
         },
-      ]
+      ],
+      parent: channelCategory,
     });
     
     addActiveVoiceChannel(member?.id, memberChannel.id);
@@ -52,7 +55,7 @@ async function moveToActiveCategory(memberId: string, voiceChannel: VoiceChannel
   const activeCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
   await voiceChannel.setParent(activeCategory, { lockPermissions: false });
-  await voiceChannel.permissionOverwrites.edit(guild.roles.everyone, { VIEW_CHANNEL: true })
+  await voiceChannel.permissionOverwrites.edit(guild.roles.everyone, { ViewChannel: false })
 
   addActiveVoiceChannel(memberId, voiceChannel.id);
 

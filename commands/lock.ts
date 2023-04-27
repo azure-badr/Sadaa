@@ -1,12 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, Role, VoiceChannel } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction, GuildMember, Role, VoiceChannel } from "discord.js";
 import { getVoiceChannelFromHash, saveVoiceChannel } from "../utils/vc";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("lock")
     .setDescription("Locks the voice channel"),
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const member = interaction.member as GuildMember;
     const guild = interaction.guild;
 
@@ -18,7 +18,7 @@ export default {
         const voiceChannel = guild?.channels.cache.get(channelId) as VoiceChannel;
 
         voiceChannel.permissionOverwrites.edit(guild?.roles.everyone as Role, {
-          CONNECT: false
+          Connect: false,
         })
         .then(async () => {
             await saveVoiceChannel(voiceChannel.id);

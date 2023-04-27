@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { PermissionFlagsBits } from "discord-api-types/v9";
-import { CommandInteraction, GuildMember, VoiceChannel } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction, GuildMember, OverwriteType, VoiceChannel } from "discord.js";
 
 import { getVoiceChannelFromHash } from "../utils/vc";
 
@@ -15,7 +15,7 @@ export default {
         .setName("list")
         .setDescription("List the permissions of your voice channel")
     ),
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const subcommand = interaction.options.getSubcommand();
     const member = interaction.member as GuildMember;
     const guild = interaction.guild;
@@ -36,7 +36,7 @@ export default {
         const voiceChannelPermissionsSorted = [];
         const permissions = voiceChannel.permissionOverwrites.cache
         for (const permission of permissions.values()) {
-          if (permission.type === "member") {
+          if (permission.type === OverwriteType.Member) {
             const member = await guild?.members.fetch(permission.id) as GuildMember;
             if (!member)
               continue;
@@ -49,7 +49,7 @@ export default {
             });
           }
 
-          if (permission.type === "role") {
+          if (permission.type === OverwriteType.Role) {
             const role = guild?.roles.cache.get(permission.id);
             if (!role)
               continue;

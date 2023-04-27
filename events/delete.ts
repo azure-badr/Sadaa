@@ -5,7 +5,7 @@ export default {
   name: "channelDelete",
   once: false,
   execute: async (channel: Channel) => {
-    if (!channel.isVoice())
+    if (!channel.isVoiceBased())
       return
 
     await deleteActiveVoiceChannel(channel.id);

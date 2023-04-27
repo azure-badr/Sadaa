@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember } from "discord.js";
 import { getVoiceChannelFromHash, saveVoiceChannel } from "../utils/vc";
 
 export default {
@@ -11,7 +11,7 @@ export default {
       .setDescription("The new name of your voice channel")
       .setRequired(true)
     ),
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const member = interaction.member as GuildMember;
     const guild = interaction.guild;
 

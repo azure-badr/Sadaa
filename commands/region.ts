@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, VoiceChannel } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction, GuildMember, VoiceChannel } from "discord.js";
 import { getVoiceChannelFromHash, saveVoiceChannel } from "../utils/vc";
 
 export default {
@@ -9,24 +9,27 @@ export default {
     .addStringOption(option => option
       .setName("region")
       .setDescription("The region to change to")
-        .addChoice("US West", "us-west")
-        .addChoice("Brazil", "brazil")
-        .addChoice("Hong Kong", "hongkong")
-        .addChoice("India", "india")
-        .addChoice("Japan", "japan")
-        .addChoice("Rotterdam", "rotterdam")
-        .addChoice("Russia", "russia")
-        .addChoice("Singapore", "singapore")
-        .addChoice("South Korea", "south-korea")
-        .addChoice("South Africa", "southafrica")
-        .addChoice("Sydney", "sydney")
-        .addChoice("US Central", "us-central")
-        .addChoice("US East", "us-east")
-        .addChoice("US South", "us-south")
-        .addChoice("Automatic", "automatic")
+      .addChoices(
+          { name: "Automatic", value: "automatic"},
+          { name: "US West", value: "us-west"},
+          { name: "Brazil", value: "brazil"},
+          { name: "Hong Kong", value: "hongkong"},
+          { name: "India", value: "india"},
+          { name: "Japan", value: "japan"},
+          { name: "Rotterdam", value: "rotterdam"},
+          { name: "Russia", value: "russia"},
+          { name: "Singapore", value: "singapore"},
+          { name: "South Korea", value: "south-korea"},
+          { name: "South Africa", value: "southafrica"},
+          { name: "Sydney", value: "sydney"},
+          { name: "US Central", value: "us-central"},
+          { name: "US East", value: "us-east"},
+          { name: "US South", value: "us-south"},
+          { name: "Automatic", value: "automatic" },
+      )
       .setRequired(true)
   ),
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const region = interaction.options.get("region")?.value as string;
     const member = interaction.member as GuildMember;
 

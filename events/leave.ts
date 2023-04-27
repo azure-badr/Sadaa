@@ -21,7 +21,7 @@ async function moveToIdleCategory(voiceChannel: VoiceChannel) {
   
   try {
     await voiceChannel.permissionOverwrites.edit(voiceChannel.guild.roles.everyone, {
-      VIEW_CHANNEL: false,
+      ViewChannel: false,
     })
     
     const category = voiceChannel.guild.channels.cache.get(idleCategoryId) as CategoryChannel;

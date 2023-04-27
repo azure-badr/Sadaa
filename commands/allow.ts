@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, VoiceChannel } from "discord.js";
+import { ChatInputCommandInteraction, CommandInteraction, GuildMember, VoiceChannel } from "discord.js";
 import { getVoiceChannelFromHash, saveVoiceChannel } from "../utils/vc";
 
 export default {
@@ -11,7 +11,7 @@ export default {
       .setDescription("The user to allow")
       .setRequired(true)
   ),
-  async execute(interaction: CommandInteraction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     const member = interaction.member as GuildMember;
     const guild = interaction.guild;
 
@@ -24,7 +24,7 @@ export default {
         const memberToAllow = interaction.options.get("user")?.member as GuildMember;
         
         voiceChannel.permissionOverwrites.edit(memberToAllow, {
-          CONNECT: true
+          Connect: true,
         })
           .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
