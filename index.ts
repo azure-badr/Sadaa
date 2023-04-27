@@ -5,16 +5,16 @@ import { token } from "./config";
 import SlashCommandObject from "./models/SlashCommandObject";
 import EventObject from "./models/EventObject";
 
-import { Client, Collection, Intents } from "discord.js";
+import { Client, Collection, GatewayIntentBits } from "discord.js";
 import ContextMenuObject from "./models/ContextMenuObject";
 
 const client = new Client({
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_VOICE_STATES, 
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildVoiceStates,
   ]
-})
+});
 
 // Events
 const eventFiles = readdirSync(path.join(__dirname, "/events/")).filter(file => file);
@@ -60,7 +60,7 @@ client.on("interactionCreate", async interaction => {
     }
   }
 
-  if (interaction.isContextMenu()) {
+  if (interaction.isUserContextMenuCommand()) {
     const contextMenu = contextMenus.get(interaction.commandName);
     if (!contextMenu) return;
 
