@@ -17,7 +17,7 @@ async function createVoiceChannel(voiceState: VoiceState) {
   const channelCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
   try {
-    const memberChannel = await channelCategory.createChannel(member?.displayName || "Channel", {
+    const memberChannel = await channelCategory.createChannel(`${member.user.username}'s VC`, {
       type: ChannelTypes.GUILD_VOICE,
       bitrate: defaultBitrate,
       userLimit: defaultUserLimit,
