@@ -10,7 +10,7 @@ export default {
       .setName("region")
       .setDescription("The region to change to")
       .addChoices(
-          { name: "Automatic", value: "automatic"},
+          { name: "Dubai", value: "dubai"},
           { name: "US West", value: "us-west"},
           { name: "Brazil", value: "brazil"},
           { name: "Hong Kong", value: "hongkong"},
@@ -43,7 +43,15 @@ export default {
           .then(async () => {
             await saveVoiceChannel(voiceChannel.id);
             return interaction.reply(`Set the region of the voice channel to ${region}`);
-          });
+          })
+          .catch(error => {
+            return interaction.reply(
+              {
+                content: "They haven't *officially* added this region yet. I'm keeping it here until they do",
+                ephemeral: true,
+              }
+            );
+          })
       })
       .catch(error => console.log(error))
   }
