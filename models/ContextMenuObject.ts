@@ -1,7 +1,7 @@
 import { ContextMenuCommandBuilder } from "@discordjs/builders";
-import { ContextMenuInteraction } from "discord.js";
+import { ContextMenuCommandInteraction } from "discord.js";
 
 export default interface ContextMenuObject {
   data: ContextMenuCommandBuilder;
-  execute: (interaction: ContextMenuInteraction) => Promise<void>;
+  execute: (interaction: ContextMenuCommandInteraction) => Promise<void>;
 }
