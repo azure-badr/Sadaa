@@ -73,6 +73,18 @@ client.on("interactionCreate", async interaction => {
       });
     }
   }
+
+  if (interaction.isModalSubmit()) {
+    const modalHandler = require(`./events/modalHandle`).default;
+    try {
+      await modalHandler.execute(interaction);
+    } catch (error) {
+      console.error(error);
+      await interaction.reply({
+        content: "An error occured while executing this interaction", ephemeral: true
+      });
+    }
+  }
 })
 
 client.login(token);
