@@ -25,6 +25,10 @@ async function createVoiceChannel(voiceState: VoiceState) {
       userLimit: defaultUserLimit,
       permissionOverwrites: [
         {
+          id: guild.roles.everyone,
+          allow: [PermissionFlagsBits.ViewChannel],
+        },
+        {
           id: member?.id,
           allow: [
             PermissionFlagsBits.Connect,
