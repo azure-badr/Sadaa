@@ -25,10 +25,6 @@ async function createVoiceChannel(voiceState: VoiceState) {
       userLimit: defaultUserLimit,
       permissionOverwrites: [
         {
-          id: guild.roles.everyone,
-          allow: [PermissionFlagsBits.ViewChannel],
-        },
-        {
           id: member?.id,
           allow: [
             PermissionFlagsBits.Connect,
@@ -59,7 +55,7 @@ async function moveToActiveCategory(memberId: string, voiceChannel: VoiceChannel
   const activeCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
   await voiceChannel.setParent(activeCategory, { lockPermissions: false });
-  await voiceChannel.permissionOverwrites.edit(guild.roles.everyone, { ViewChannel: false })
+  await voiceChannel.permissionOverwrites.edit(guild.roles.everyone, { ViewChannel: true })
 
   addActiveVoiceChannel(memberId, voiceChannel.id);
 
