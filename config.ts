@@ -12,3 +12,4 @@ export const defaultBitrate: any = process.env.DEFAULT_BITRATE || 96000;
 export const redisPassword: any = process.env.REDISPASSWORD;
 export const redisHost: any = process.env.REDISHOST;
 export const redisPort: any = process.env.REDISPORT;
+export const REDIS_URL: any = process.env.REDIS_URL;
