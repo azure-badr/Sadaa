@@ -10,6 +10,9 @@ client.connect()
   .then(() => console.log("Redis client connected"))
   .catch(err => console.error(err));
 
+client.on("error", (error) => {
+  console.error(error);
+});
 
 export async function addActiveVoiceChannel(memberId: string, voiceChannelId: string): Promise<void> {
   await client.sAdd("voice_channels", voiceChannelId);
