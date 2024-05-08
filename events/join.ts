@@ -1,4 +1,4 @@
-import { CategoryChannel, ChannelType, GuildMember, VoiceChannel, VoiceState } from "discord.js"
+import { CategoryChannel, ChannelType, DiscordAPIError, DiscordErrorData, GuildMember, VoiceChannel, VoiceState } from "discord.js"
 
 import {
   voiceChannelId,
@@ -10,16 +10,15 @@ import {
 import { addActiveVoiceChannel, isVoiceChannelSaved } from "../utils/vc";
 import { PermissionFlagsBits } from "discord.js";
 
-async function createVoiceChannel(voiceState: VoiceState) {
+async function createVoiceChannel(voiceState: VoiceState, name?: string) {
   const guild = voiceState.guild;
   const member = voiceState.member as GuildMember;
-
 
   try {
     const channelCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
     const memberChannel = await guild.channels.create({
-      name: `${member.user.username}'s VC`,
+      name: name || `${member?.displayName}'s VC`,
       type: ChannelType.GuildVoice,
       bitrate: defaultBitrate,
       userLimit: defaultUserLimit,
@@ -45,7 +44,7 @@ async function createVoiceChannel(voiceState: VoiceState) {
     addActiveVoiceChannel(member?.id, memberChannel.id);
     return memberChannel;
 
-  } catch (error) {
+  } catch (error: any) {
     throw error;
   }
 }
@@ -69,9 +68,10 @@ export default {
     if (oldState.channel) return;
     
     if (newState.channelId != voiceChannelId) return;
-    
-    const member = newState.member;
 
+    const member = newState.member;
+    console.log(`[Join] Member {${member?.displayName}} joined to create a VC`)
+    
     const savedChannelId = await isVoiceChannelSaved(member as GuildMember);
     if (savedChannelId) {
       const voiceChannel = member?.guild?.channels.cache.get(savedChannelId as string) as VoiceChannel;
@@ -89,8 +89,21 @@ export default {
       .then(channel => {
         member?.voice
           .setChannel(channel)
-          .catch(() => { return; });
+          .catch(() => { return; })
       })
-      .catch(console.error)
+      .catch(async (error) => {
+        if (!(error instanceof DiscordAPIError)) return;
+
+        // If VC name contains words not allowed for servers in Server Discovery.
+        // Yeah, there's no way around this. This is how you do it..
+        const errors = error.rawError as any;
+        if (errors.errors.name._errors[0].code == "INVALID_COMMUNITY_PROPERTY_NAME") {
+          console.log(`[Join] Member {${member?.displayName}} tried to create a VC with a name that is not allowed.`)
+          const channel = await createVoiceChannel(newState, "Your VC");
+          member?.voice
+            .setChannel(channel)
+            .catch(() => { return; })
+        }
+      });
   }
 }
