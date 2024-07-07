@@ -10,6 +10,7 @@ client.connect()
   .then(() => console.log("Redis client connected"))
   .catch(err => console.error(err));
 
+// @ts-ignore
 client.on("error", (error) => {
   console.error(error);
 });
