@@ -19,44 +19,25 @@ export default {
         if (!channelId)
           return interaction.reply("You are not in an active voice channel");
         
-        // Check if member has a role with nameChangeAllowedRoleId
-        const hasNameChangeAllowedRole = member.roles.cache.some(role => role.id === nameChangeAllowedRoleId);
-        if (hasNameChangeAllowedRole) {
-          const modal = new ModalBuilder()
-            .setCustomId(`${channelId}`)
-            .setTitle("Rename your voice channel")
-          
-          const nameInput = new TextInputBuilder()
-            .setCustomId("sadaa-name-input")
-            .setLabel("Name of your voice channel")
-            .setPlaceholder("Enter a name. Please do not set anything inappropriate")
-            .setStyle(TextInputStyle.Short)
-            .setMinLength(1)
-            .setMaxLength(32)
-            .setRequired(true)
-          
-          modal.addComponents(
-            new ActionRowBuilder<ModalActionRowComponentBuilder>()
-              .addComponents(nameInput)
-          );
-
-          await interaction.showModal(modal);
-          return;
-        }
+        const modal = new ModalBuilder()
+          .setCustomId(`${channelId}`)
+          .setTitle("Rename your voice channel")
         
-        await interaction.reply(
-          "Renaming voice channels has been disabled **for now** due to safety concerns."
+        const nameInput = new TextInputBuilder()
+          .setCustomId("sadaa-name-input")
+          .setLabel("Name of your voice channel")
+          .setPlaceholder("Enter a name. Please do not set anything inappropriate")
+          .setStyle(TextInputStyle.Short)
+          .setMinLength(1)
+          .setMaxLength(32)
+          .setRequired(true)
+        
+        modal.addComponents(
+          new ActionRowBuilder<ModalActionRowComponentBuilder>()
+            .addComponents(nameInput)
         );
-        const channel = interaction.guild?.channels.cache.get(channelId);
-        if (!channel) return;
 
-        await channel.setName(`${member.displayName}'s VC`);
-
-        await interaction.followUp(
-          { content: "If you want to rename your voice channel to something else, please ask Fauj.", ephemeral: true }
-        )
-
-        return;
+        await interaction.showModal(modal);
       });
   }
 }
