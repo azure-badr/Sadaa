@@ -17,7 +17,6 @@ async function createVoiceChannel(voiceState: VoiceState, name?: string) {
 
   const channelCategory = guild.channels.cache.get(categoryId) as CategoryChannel;
 
-  // removed the try...catch block since the error gets thrown either way (at least it should) and should be caught by the calling function
   const memberChannel = await guild.channels
     .create({
       name: name || `${member?.displayName}'s VC`,
@@ -43,10 +42,8 @@ async function createVoiceChannel(voiceState: VoiceState, name?: string) {
       parent: channelCategory,
     })
     .catch(() => {
-      // create a censored name from the user's display name
       const censored = member?.displayName.replace(/./g, "*");
 
-      // if this fails, then it'll be caught in the error block below where I commented and it means the error was something else
       return guild.channels.create({
         name: name || `${censored}'s VC`,
         type: ChannelType.GuildVoice,
@@ -105,7 +102,6 @@ export default {
       const voiceChannel = member?.guild?.channels.cache.get(savedChannelId as string) as VoiceChannel;
       moveToActiveCategory(member?.id as string, voiceChannel).then((channel) => {
         member?.voice.setChannel(channel).catch(() => {
-          // this is where the error will be caught even if the censoring fails
           return;
         });
       });
